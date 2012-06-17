@@ -23,3 +23,11 @@ production:
   database: db/production.sqlite3
   pool: 5
   timeout: 5000
+
+jcarr:
+  adapter: mysql2
+  database: wit
+  username: root
+  password: 50drtkdsfsd2j3
+  host: localhost
+
