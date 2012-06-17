@@ -4,8 +4,12 @@ pre_install:
 	bundle install
 	rake db:migrate
 
+push:
+	git commit -a
+	git push
+
 runserver:
-	rails server
+	rails server -p 80
 
 otherpreinstallstuff:
 	apt-get install rubygems
