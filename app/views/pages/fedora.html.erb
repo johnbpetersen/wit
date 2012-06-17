@@ -1,0 +1,133 @@
+<div id="noVNC_infotext">
+  <p>You can connect to your Droplet's console using our HTML5 in-browser viewer.</p>
+</div>
+<div id="noVNC_click_me" class="btn">
+  Connect
+</div>
+<%  %>
+<div id="noVNC_screen">
+  <div id="noVNC_status_bar" class="noVNC_status_bar">
+      <table border=0 width="100%"><tr>
+          <td><div id="noVNC_status" style="display:none;">Loading</div></td>
+          <td width="1%"><div id="noVNC_buttons">
+              <input type=button value="Send CtrlAltDel" id="sendCtrlAltDelButton" style="display:none;">
+                  </div></td>
+      </tr></table>
+  </div>
+  <canvas id="noVNC_canvas" width="620px" height="5px">
+      Canvas not supported.
+  </canvas>
+</div>
+<script>
+/*jslint white: false */
+/*global window, $, Util, RFB, */
+"use strict";
+
+var rfb;
+
+function passwordRequired(rfb) {
+    var msg;
+    msg = '<form onsubmit="return setPassword();"';
+    msg += '  style="margin-bottom: 0px">';
+    msg += 'Password Required: ';
+    msg += '<input type=password size=10 id="password_input" class="noVNC_status">';
+    msg += '<\/form>';
+    $D('noVNC_status_bar').setAttribute("class", "noVNC_status_warn");
+    $D('noVNC_status').innerHTML = msg;
+}
+function setPassword() {
+    rfb.sendPassword($D('password_input').value);
+    return false;
+}
+function sendCtrlAltDel() {
+    rfb.sendCtrlAltDel();
+    return false;
+}
+function updateState(rfb, state, oldstate, msg) {
+    var s, sb, cad, level;
+    s = $D('noVNC_status');
+    sb = $D('noVNC_status_bar');
+    cad = $D('sendCtrlAltDelButton');
+    switch (state) {
+        case 'failed':       level = "error";  break;
+        case 'fatal':        level = "error";  break;
+        case 'normal':       level = "normal"; break;
+        case 'disconnected': level = "normal"; break;
+        case 'loaded':       level = "normal"; break;
+        default:             level = "warn";   break;
+    }
+
+    if (state === "normal") { cad.disabled = false; }
+    else                    { cad.disabled = true; }
+
+    if (typeof(msg) !== 'undefined') {
+        sb.setAttribute("class", "noVNC_status_" + level);
+        s.innerHTML = msg;
+    }
+}
+
+$('#noVNC_click_me').click(function () {
+    var host, port, password, path;
+
+    $('#noVNC_click_me').hide();
+    $('#noVNC_infotext').hide();
+
+    host = '69.55.54.2';
+    port = '6085';
+    password = WebUtil.getQueryVar('password', 'nYOxe5kN');
+    path = WebUtil.getQueryVar('path', '');
+    if ((!host) || (!port)) {
+        updateState('failed',
+            "Must specify host and port in URL");
+        return;
+    }
+
+    rfb = new RFB({'target':       $D('noVNC_canvas'),
+                   'encrypt':      WebUtil.getQueryVar('encrypt', false),
+                   'true_color':   WebUtil.getQueryVar('true_color', true),
+                   'local_cursor': WebUtil.getQueryVar('cursor', true),
+                   'shared':       WebUtil.getQueryVar('shared', true),
+                   'view_only':    WebUtil.getQueryVar('view_only', false),
+                   'updateState':  updateState,
+                   'onPasswordRequired':  passwordRequired});
+    rfb.connect(host, port, password, path);
+
+    setTimeout('resize_modal()',1500);
+
+});
+
+function resize_modal() {
+  var new_height = $('#noVNC_canvas').attr('height');
+  var new_width = $('#noVNC_canvas').attr('width');
+  new_height = parseFloat(new_height);
+  new_width = parseFloat(new_width);
+  new_height = new_height + 20;
+  new_width = new_width + 20;
+  
+  $('.vnc .modal-body').css('max-height', new_height);
+  $('.vnc .modal-body').css('max-width', new_width);
+  $('.vnc .modal-body').css('width', new_width);
+  $('.vnc').css('max-height', new_height + 130);
+  $('.vnc').css('max-width', new_width + 30);
+  $('.vnc').css('width', new_width + 30);
+  $('.vnc .modal-body').css('background', '#000');
+  //$('.vnc.modal').css('left', '40%');
+  //$('.vnc.modal.fade.in').css('top', '25%');
+  //modal = $('.vnc');
+  //modal.css('margin-top',(modal.outerHeight()/2)*-1);
+  //modal.css('margin-left',(modal.outerWidth()/2)*-1);
+  
+  $('.vnc').css('margin-top',((new_height+130)/2)*-1);
+  $('.vnc').css('margin-left',((new_width+130)/2)*-1);
+  $('.vnc').css('max-height', new_height + 130);
+  $('.vnc').css('max-width', new_width + 30);
+  $('.vnc').css('width', new_width + 30);
+  $('.vnc').css('height', new_height + 130);
+  $('.vnc .modal-body').css('max-height', new_height);
+  $('.vnc .modal-body').css('max-width', new_width);
+  $('.vnc .modal-body').css('width', new_width-10);
+  $('.vnc .modal-body').css('height', new_height-10);
+  $('.vnc .modal-body').css('margin', '0 auto');
+}
+
+</script>

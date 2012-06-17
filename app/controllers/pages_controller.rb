@@ -10,4 +10,7 @@ class PagesController < ApplicationController
   
   def ubuntu
   end
+
+  def fedora
+  end
 end
