@@ -3,6 +3,7 @@ Wit::Application.routes.draw do
   get "pages/home"
   get "pages/override"
   get "pages/contact"
+  get "pages/ubuntu"
 
   devise_for :users
 
