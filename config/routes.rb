@@ -1,14 +1,12 @@
 Wit::Application.routes.draw do
   
   get "pages/home"
-
   get "pages/override"
-
   get "pages/contact"
 
   devise_for :users
 
-  root :to => "home#index"
+  root :to => "pages#home"
   
   # The priority is based upon order of creation:
   # first created -> highest priority.
