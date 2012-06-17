@@ -5,7 +5,7 @@ pre_install:
 	rake db:migrate
 
 push:
-	git commit -a
+	-git commit -a
 	git push
 
 runserver:
