@@ -28,7 +28,7 @@ gem 'jquery-rails'
 
 gem "simple_form"
 gem "inherited_resources"
-gem "mysql2"
+
 
 
 # To use ActiveModel has_secure_password
