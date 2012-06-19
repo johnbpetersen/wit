@@ -1,0 +1,19 @@
+%h1 Listing invite_requests
+
+%table
+  %tr
+    %th Email
+    %th
+    %th
+    %th
+
+  - @invite_requests.each do |invite_request|
+    %tr
+      %td= invite_request.email
+      %td= link_to 'Show', invite_request
+      %td= link_to 'Edit', edit_invite_request_path(invite_request)
+      %td= link_to 'Destroy', invite_request, :confirm => 'Are you sure?', :method => :delete
+
+%br
+
+= link_to 'New Invite request', new_invite_request_path

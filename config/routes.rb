@@ -1,5 +1,7 @@
 Wit::Application.routes.draw do
   
+  resources :invite_requests
+
   get "pages/home"
   get "pages/override"
   get "pages/contact"
